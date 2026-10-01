@@ -1,0 +1,7 @@
+/kernel/target/
+/disk_builder/target/
+/build/
+*.img
+*.iso
+*.bin
+.DS_Store

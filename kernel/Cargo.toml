@@ -1,0 +1,54 @@
+[package]
+name = "neocore-kernel"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "neocore-kernel"
+test = false
+
+[dependencies]
+bootloader_api = "0.11"
+x86_64         = "0.15"
+pic8259        = "0.11"
+uart_16550     = "0.3"
+pc-keyboard    = "0.7"
+spinning_top   = "0.3"
+volatile       = "0.4"
+bitflags       = "2.4"
+
+lazy_static = { version = "1.4", features = ["spin_no_std"] }
+
+linked_list_allocator = "0.10"
+
+smoltcp = { version = "0.11", default-features = false, features = [
+    "socket-tcp",
+    "socket-udp",
+    "socket-icmp",
+    "proto-ipv4",
+    "proto-dhcpv4",
+    "medium-ethernet",
+    "alloc",
+]}
+font8x8 = { version = "0.3.1", default-features = false, features = ["unicode"] }
+
+
+
+[profile.release]
+panic    = "abort"
+opt-level = "s"
+lto      = true
+codegen-units = 1
+
+[profile.dev]
+panic = "abort"
+
+[package.metadata.bootimage]
+test-args = [
+    "-device", "isa-debug-exit,iobase=0xf4,iosize=0x04",
+    "-serial", "stdio",
+    "-display", "none",
+    "-m", "256M",
+]
+test-success-exit-code = 33
+test-timeout = 120
